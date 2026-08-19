@@ -22,8 +22,9 @@ logging.info(f"\n\n{'-' * 25}(Started on {time} {now.day}.{now.month}){'-' * 25}
 class Violette(commands.AutoShardedBot):
     def __init__(self):
         super().__init__(
-            command_prefix = config.PROFILE["prefix"],
-            owner_ids = config.PROFILE["owner_ids"],
+            command_prefix=config.PROFILE["prefix"],
+            owner_ids=config.PROFILE["owner_ids"],
+            test_guilds=config.PROFILE["test_guilds"],
             status=config.PROFILE["status"],
 
             allowed_mentions=disnake.AllowedMentions.none(),
