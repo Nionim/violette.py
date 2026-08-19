@@ -12,6 +12,7 @@ PROFILE: map = {
         "1121470117516161217"
     ],
     "status": disnake.Status.do_not_disturb,
-    "activity_name": "",
-    "activity_state": ""
+    "activity_type": disnake.ActivityType.custom,
+    "activity_name": "Just..",
+    "activity_state": "📡 I Want to Believe"
 }

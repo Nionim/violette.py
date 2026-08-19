@@ -4,10 +4,20 @@ import config
 import disnake, aiohttp, logging, datetime, os
 from disnake.ext import commands
 
+def init_dirs():
+    dirs = ["./logs", "./cogs"]
+
+    for d in dirs:
+        if not os.path.exists(d):
+            os.makedirs(d)
+
 now = datetime.datetime.now()
 time = now.strftime("%H:%M:%S")
-#logging.basicConfig(filename='./logs/discord.log', encoding='utf-8', level=logging.INFO)
-#logging.info(f"\n\n{'-' * 25}(Stardet on {time} {now.day}.{now.month}){'-' * 25}\n")
+
+
+init_dirs()
+logging.basicConfig(filename='./logs/discord.log', encoding='utf-8', level=logging.INFO)
+logging.info(f"\n\n{'-' * 25}(Started on {time} {now.day}.{now.month}){'-' * 25}\n")
 
 class Violette(commands.AutoShardedBot):
     def __init__(self):
@@ -21,24 +31,25 @@ class Violette(commands.AutoShardedBot):
             help_command=None,
 
             activity=disnake.Activity(
-                type=disnake.ActivityType.custom,
+                type=config.PROFILE["activity_type"],
                 name=config.PROFILE["activity_name"],
                 state=config.PROFILE["activity_state"]
             )
         )
         self.session = aiohttp.ClientSession(loop=self.loop)
 
-def init_dirs():
-    dirs = ["./logs", "./cogs"]
-
-    for d in dirs:
-        if not os.path.exists(d):
-            os.makedirs(d)
+async def on_disconnect(self):
+    await self.session.close()
+    await super().close()
 
 if __name__ == "__main__":
-    init_dirs()
-
     bot = Violette()
+
+    shards_count: int = bot.shards.keys().__len__()
+
+    if shards_count == 1:
+        bot.shards[0].reconnect()
+        print(f"Zero shard reconnected")
 
     bot.load_extensions("cogs")
     bot.run(config.TOKEN)
